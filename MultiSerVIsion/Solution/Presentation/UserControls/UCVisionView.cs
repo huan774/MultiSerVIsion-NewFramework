@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MvCameraControl;
 
 namespace MultiSerVIsion.Solution.Presentation.UserControls
 {
@@ -29,7 +30,6 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
             nudGain.ValueChanged += (s, e) => GainValueChanged?.Invoke(this, EventArgs.Empty);
             cbxTriggerMode.SelectedIndexChanged += (s, e) => TriggerModeChanged?.Invoke(this, EventArgs.Empty);
             trackLight.ValueChanged += (s, e) => LightSliderChanged?.Invoke(this, EventArgs.Empty);
-
 
             btnSingleGrab.Click += (s, e) => BtnSingleGrabClick?.Invoke(this, EventArgs.Empty);
             btnContinuousGrab.Click += (s, e) => BtnContinuousGrabClick?.Invoke(this, EventArgs.Empty);

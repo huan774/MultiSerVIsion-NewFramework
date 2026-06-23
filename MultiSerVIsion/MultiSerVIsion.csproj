@@ -36,6 +36,9 @@
     <Reference Include="halcondotnet">
       <HintPath>..\..\..\HALCON\bin\dotnet35\halcondotnet.dll</HintPath>
     </Reference>
+    <Reference Include="MvCameraControl.Net">
+      <HintPath>C:\Program Files (x86)\MVS\Development\DotNet\win64\net40\MvCameraControl.Net.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System">

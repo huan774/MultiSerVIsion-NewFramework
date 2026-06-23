@@ -58,8 +58,13 @@ namespace MultiSerVIsion
             _treeUC.OnViewShow();
 
             _treeUC.DeviceNodeSelected += OnDeviceNodeSelected;
+            _treeUC.DeviceNodeUnSelect += OndeviceNodeUnSelect;
             _treeUC.AddDeviceRequest += OnAddDeviceRequest;
-            _treeUC.RemoveDeviceRequst += OnRemoveDeviceRequest;
+            _treeUC.RemoveDeviceRequest += OnRemoveDeviceRequest;
+            _treeUC.CopyDeviceRequest += OnCopyDeviceRequest;
+            _treeUC.ToggleDeviceEnableRequest += OnToggleDeviceEnableRequest;
+
+            _treeUC.OnViewShow();
         }
         private void OnDeviceNodeSelected(string deviceId)
         {
@@ -102,7 +107,14 @@ namespace MultiSerVIsion
         {
 
         }
-
+        private void OndeviceNodeUnSelect()
+        {
+            if (_detailUC != null)
+            {
+                _detailUC.SetUIPlaceholder();
+            }
+            split_inter.SplitterDistance = split_inter.Width; 
+        }
 
         private void CreateViewIfNotExist(TabPage targetTab)
         {

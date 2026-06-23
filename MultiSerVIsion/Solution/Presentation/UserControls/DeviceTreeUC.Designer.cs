@@ -36,8 +36,10 @@
             this.btn_RefreshTress = new System.Windows.Forms.ToolStripButton();
             this.treeView_Device = new System.Windows.Forms.TreeView();
             this.contextMenuStrip_Device = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsmiAdd = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiDel = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_AddChild = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_Delete = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_Copy = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_EnableDisable = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.contextMenuStrip_Device.SuspendLayout();
             this.SuspendLayout();
@@ -95,22 +97,36 @@
             // 
             this.contextMenuStrip_Device.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.contextMenuStrip_Device.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiAdd,
-            this.tsmiDel});
+            this.tsmi_AddChild,
+            this.tsmi_Delete,
+            this.tsmi_Copy,
+            this.tsmi_EnableDisable});
             this.contextMenuStrip_Device.Name = "menueTreeRight";
-            this.contextMenuStrip_Device.Size = new System.Drawing.Size(301, 124);
+            this.contextMenuStrip_Device.Size = new System.Drawing.Size(185, 156);
             // 
-            // tsmiAdd
+            // tsmi_AddChild
             // 
-            this.tsmiAdd.Name = "tsmiAdd";
-            this.tsmiAdd.Size = new System.Drawing.Size(300, 38);
-            this.tsmiAdd.Text = "添加设备";
+            this.tsmi_AddChild.Name = "tsmi_AddChild";
+            this.tsmi_AddChild.Size = new System.Drawing.Size(184, 38);
+            this.tsmi_AddChild.Text = "添加设备";
             // 
-            // tsmiDel
+            // tsmi_Delete
             // 
-            this.tsmiDel.Name = "tsmiDel";
-            this.tsmiDel.Size = new System.Drawing.Size(300, 38);
-            this.tsmiDel.Text = "移除设备";
+            this.tsmi_Delete.Name = "tsmi_Delete";
+            this.tsmi_Delete.Size = new System.Drawing.Size(184, 38);
+            this.tsmi_Delete.Text = "移除设备";
+            // 
+            // tsmi_Copy
+            // 
+            this.tsmi_Copy.Name = "tsmi_Copy";
+            this.tsmi_Copy.Size = new System.Drawing.Size(184, 38);
+            this.tsmi_Copy.Text = "复制设备";
+            // 
+            // tsmi_EnableDisable
+            // 
+            this.tsmi_EnableDisable.Name = "tsmi_EnableDisable";
+            this.tsmi_EnableDisable.Size = new System.Drawing.Size(184, 38);
+            this.tsmi_EnableDisable.Text = "禁用设备";
             // 
             // DeviceTreeUC
             // 
@@ -136,7 +152,9 @@
         private System.Windows.Forms.ToolStripButton btn_DelDevice;
         private System.Windows.Forms.ToolStripButton btn_RefreshTress;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_Device;
-        private System.Windows.Forms.ToolStripMenuItem tsmiAdd;
-        private System.Windows.Forms.ToolStripMenuItem tsmiDel;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_AddChild;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_Delete;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_Copy;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_EnableDisable;
     }
 }
