@@ -73,7 +73,7 @@
             this.btn_DelDevice.Image = ((System.Drawing.Image)(resources.GetObject("btn_DelDevice.Image")));
             this.btn_DelDevice.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btn_DelDevice.Name = "btn_DelDevice";
-            this.btn_DelDevice.Size = new System.Drawing.Size(46, 36);
+            this.btn_DelDevice.Size = new System.Drawing.Size(46, 44);
             this.btn_DelDevice.Text = "移除设备";
             // 
             // btn_RefreshTress
@@ -82,7 +82,7 @@
             this.btn_RefreshTress.Image = ((System.Drawing.Image)(resources.GetObject("btn_RefreshTress.Image")));
             this.btn_RefreshTress.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btn_RefreshTress.Name = "btn_RefreshTress";
-            this.btn_RefreshTress.Size = new System.Drawing.Size(46, 36);
+            this.btn_RefreshTress.Size = new System.Drawing.Size(46, 44);
             this.btn_RefreshTress.Text = "刷新设备";
             // 
             // treeView_Device
@@ -107,25 +107,25 @@
             // tsmi_AddChild
             // 
             this.tsmi_AddChild.Name = "tsmi_AddChild";
-            this.tsmi_AddChild.Size = new System.Drawing.Size(184, 38);
+            this.tsmi_AddChild.Size = new System.Drawing.Size(300, 38);
             this.tsmi_AddChild.Text = "添加设备";
             // 
             // tsmi_Delete
             // 
             this.tsmi_Delete.Name = "tsmi_Delete";
-            this.tsmi_Delete.Size = new System.Drawing.Size(184, 38);
+            this.tsmi_Delete.Size = new System.Drawing.Size(300, 38);
             this.tsmi_Delete.Text = "移除设备";
             // 
             // tsmi_Copy
             // 
             this.tsmi_Copy.Name = "tsmi_Copy";
-            this.tsmi_Copy.Size = new System.Drawing.Size(184, 38);
+            this.tsmi_Copy.Size = new System.Drawing.Size(300, 38);
             this.tsmi_Copy.Text = "复制设备";
             // 
             // tsmi_EnableDisable
             // 
             this.tsmi_EnableDisable.Name = "tsmi_EnableDisable";
-            this.tsmi_EnableDisable.Size = new System.Drawing.Size(184, 38);
+            this.tsmi_EnableDisable.Size = new System.Drawing.Size(300, 38);
             this.tsmi_EnableDisable.Text = "禁用设备";
             // 
             // DeviceTreeUC

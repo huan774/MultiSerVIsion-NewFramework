@@ -1,4 +1,5 @@
 ﻿using MultiSerVIsion.Solution.Presentation.UserControls;
+using MultiSerVIsion.Solution.Presentation.Winforms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -66,32 +67,61 @@ namespace MultiSerVIsion
 
             _treeUC.OnViewShow();
         }
+     /*   private bool GetDeviceEnableState(string deviceId)
+        {
+            return DeviceService.IsDeviceEnable(deviceId);
+        }*/
         private void OnDeviceNodeSelected(string deviceId)
         {
+            
             if (_detailUC == null)
             {
                 _detailUC= new DeviceDateilUC();
                 _detailUC.Dock= DockStyle.Fill;
-                split_inter.Panel2.Controls.Add( _detailUC );
+                 split_inter.Panel2.Controls.Add( _detailUC );
                 _detailUC.OnDeviceConfigSave += OnDeviceConfigSaved;
             }
             split_inter.SplitterDistance = split_inter.Width - DatailPanelWidth;
-            
+        }
+        private void OnDeviceNodeUnSelect()
+        {
+            split_inter.SplitterDistance = split_inter.Width;
+            if(_detailUC!= null)
+            {
+                _detailUC.SetUIPlaceholder();
+            }
         }
         private void OnAddDeviceRequest()
         {
-
-          /*  var newDevice = DeviceSerive.CreateNewDevice();
-            if( newDevice != null )
+           string groupKey = _treeUC.GetRightClickGroupKey();
+           if (string.IsNullOrEmpty(groupKey))
             {
-                _treeUC.AddTreeNode("Group_Camera",newDevice.Id,newDevice.Name);
-            }*/
+                MessageBox.Show("请右键左侧分组后再添加设备");
+                return;
+            }
+            using (FrmAddDevice dialog = new FrmAddDevice())
+            {
+                dialog.TargetGroupId = groupKey;
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                   /* var newDeviceInfo = dialog.GetInput();
+                    string newDevId = DeviceService.CreateDevice(newDeviceInfo);
+                    _treeUC.AddTreeNode(newDeviceInfo.GroupId, newDevId, newDeviceInfo.DeviceName);*/
+                }
+            }
+        
         }
         private void OnRemoveDeviceRequest(string deviceId)
         {
-          /*  DeviceService.DeleteDevice(deviceId);
+            DialogResult res= MessageBox.Show($"确认删除设备 {deviceId}? 删除后配置将丢失","确认删除",
+                MessageBoxButtons.YesNo,MessageBoxIcon.Warning);
+
+            if (res != DialogResult.Yes)
+                return;
+
+        /*    DeviceSerive.DeleteDevice(deviceId);*/
             _treeUC.RemoveTreeNode(deviceId);
-            split_inter.SplitterDistance = split_inter.Width;*/
+            _treeUC.ClearSelectNode();
         }
         private void OnDeviceConfigSaved(string  deviceId,Dictionary<string,string> config)
         {
@@ -101,11 +131,14 @@ namespace MultiSerVIsion
         }
         private void OnCopyDeviceRequest(string sourceDevId)
         {
-           
+           /*string newId=DeviceService.CopyDevice(sourceDevId);
+            var deviceModel=DeviceService.GetDeviceModel(newId);
+            _treeUC.AddTreeNode(deviceModel.GroupId, newId, $"{deviceModel.Name}_副本");*/
         }
         private void OnToggleDeviceEnableRequest(string deviceId)
         {
-
+          /*  DeviceService.ToggleDeviceEnable(deviceId);
+            _treeUC.refreshDeviceStatusIcon();*/
         }
         private void OndeviceNodeUnSelect()
         {

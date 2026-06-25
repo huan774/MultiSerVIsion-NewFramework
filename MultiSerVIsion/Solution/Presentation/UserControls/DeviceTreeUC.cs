@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,9 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
 {
     public partial class DeviceTreeUC : BaseViewUc
     {
+        private TreeNode _rightClickGroupNode;
+        private TreeNode _rightClickNode=null;
+        private Func<string, bool> GetDeviceEnableStatus {  get; set; }
 
         public event Action<string> DeviceNodeSelected;
         public event Action DeviceNodeUnSelect;
@@ -25,16 +29,16 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
 
             treeView_Device.ContextMenuStrip = contextMenuStrip_Device;
             treeView_Device.NodeMouseClick += TreeView_Device_NodeMouseClick;
-            
-            btn_AddDevice.Click += (s, e) => AddDeviceRequest?.Invoke();
-            btn_DelDevice.Click += Btn_DelDevice_Click;
             contextMenuStrip_Device.Opening += ContextMenuStrip_Device_Opening;
+            contextMenuStrip_Device.Closed += (s, e) => _rightClickNode = null;
 
-           tsmi_AddChild.Click += Tsim_AddChild_Click;
+            btn_AddDevice.Click += Btn_AddDevice_Click;
+            btn_DelDevice.Click += Btn_DelDevice_Click;
+            
+            tsmi_AddChild.Click += Tsim_AddChild_Click;
             tsmi_Copy.Click += Tsim_Copy_Click;
             tsmi_EnableDisable.Click += Tsmi_EnableDisable_Click;
             tsmi_Delete.Click += Tsmi_Delete_Click;
-            
         }
 
         private void RaiseDeviceSelected(string device)
@@ -63,33 +67,68 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
         }
         private void TreeView_Device_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-           if(e.Button!=MouseButtons.Left) return;
-            var node = e.Node;
-            if(node.Tag==null||string.IsNullOrWhiteSpace(node.Tag.ToString()))
+            if (e.Button == MouseButtons.Left)
             {
-                RaiseDeviceUnSelect();
-                return;
-            }
-            if(node.Tag is string devId)
+                _rightClickNode = null;
+                _rightClickGroupNode= null;
+
+                string nodeTage=e.Node.Tag?.ToString();
+                if (nodeTage != null && !nodeTage.StartsWith("Group_"))
+                {
+                    RaiseDeviceUnSelect();
+                }
+                else if (!string.IsNullOrEmpty(nodeTage))
+                {
+                    RaiseDeviceSelected(nodeTage);
+                    _rightClickGroupNode = e.Node.Parent;
+                    _rightClickNode = e.Node;
+                }
+                else
+                {
+                    RaiseDeviceUnSelect();
+                }
+            } 
+            else if(e.Button == MouseButtons.Right)
             {
-                RaiseDeviceSelected(devId);
+                string tag = e.Node.Tag?.ToString() ?? "";
+                if (tag.StartsWith("Group_"))
+                {
+                    _rightClickGroupNode=e.Node;
+                    _rightClickNode=null;
+                }
+                else
+                {
+                    _rightClickNode = e.Node;
+                    _rightClickGroupNode = e.Node.Parent;
+                    
+                }
             }
         }
         private void ContextMenuStrip_Device_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var selectNode = treeView_Device.SelectedNode;
-            if (selectNode != null)
+            var rightNode = _rightClickNode;
+            var groupNode = _rightClickGroupNode;
+
+            if (rightNode == null && groupNode==null)
             {
                 e.Cancel = true;
                 return;
             }
 
-            bool isDeviceNode=selectNode.Tag!=null&&selectNode.Tag is string deviceNode;
+            bool isDeviceNode = rightNode!= null;
 
             tsmi_AddChild.Visible = true;
+
             tsmi_Copy.Visible = isDeviceNode;
             tsmi_EnableDisable.Visible = isDeviceNode;
             tsmi_Delete.Visible = isDeviceNode;
+
+            if (isDeviceNode && GetDeviceEnableStatus != null)
+            {
+                string devId = rightNode.Tag.ToString();
+                bool enable=GetDeviceEnableStatus(devId);
+                tsmi_EnableDisable.Text = enable ? "禁用设备" : "启动设备";
+            }
         }
         private void Btn_AddDevice_Click(object sender, EventArgs e)
         {
@@ -99,24 +138,26 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
         {
             if (treeView_Device.SelectedNode?.Tag is string deviceId)
             {
-                RemoveDeviceRequest?.Invoke(deviceId);
+                RaiseRemoveDevice(deviceId);
             }
         }
         private void Tsim_AddChild_Click(object sender, EventArgs e)
         {
+           
             RaiseAddDevice();
+            
         }
         private void Tsim_Copy_Click(object sender, EventArgs e)
         {
-            var node = treeView_Device.SelectedNode;
-            if(node?.Tag is string deviceId)
+            var node = _rightClickNode;
+            if (node?.Tag is string deviceId)
             {
                 RaiseCopyDevice(deviceId);
             }
         }
         private void Tsmi_EnableDisable_Click(object sender, EventArgs e)
         {
-            var node = treeView_Device.SelectedNode;
+            var node = _rightClickNode;
             if(node?.Tag is string deviceId)
             {
                 RaiseToggleEnable(deviceId);
@@ -124,19 +165,29 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
         }
         private void Tsmi_Delete_Click(object sender,EventArgs e)
         {
-           var node=treeView_Device.SelectedNode;
+           var node=_rightClickNode;
             if( node?.Tag is string deviceId)
             {
                 RaiseRemoveDevice(deviceId);
             }
         }
-
         public void AddTreeNode(string parentKey,string deviceId,string text)
         {
-            var parent=FindNode(treeView_Device.Nodes,parentKey);
-            var newNode = new TreeNode(text){ Tag = deviceId  };
-            parent?.Nodes.Add(newNode);
-            treeView_Device.ExpandAll();
+
+            TreeNode targetGroup = null;
+            foreach (TreeNode rootNode in treeView_Device.Nodes)
+            {
+                if (rootNode.Tag?.ToString() == parentKey)
+                {
+                    targetGroup = rootNode;
+                    break;
+                }
+            }if (targetGroup == null) return;
+
+            TreeNode devNode = new TreeNode(deviceId);
+            devNode.Tag = deviceId;
+            targetGroup.Nodes.Add(devNode);
+            targetGroup.Expand();
         }
         public void RemoveTreeNode(string deviceid)
         {
@@ -153,11 +204,15 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
             }
             return null;
         }
+        public string GetRightClickGroupKey()
+        {
+            MessageBox.Show("reture");
+            return _rightClickGroupNode?.Tag?.ToString() ?? string.Empty;
+        }
         public override void OnViewShow()
         {
             base.OnViewShow();
             RefreshDeviceStatusIcon();
-
         }
         public override void SetUIPlaceholder()
         {
@@ -169,9 +224,9 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
         public void ClearSelectNode()
         {
             treeView_Device.SelectedNode = null;
+            _rightClickNode= null;
             RaiseDeviceUnSelect();
         }
         private void RefreshDeviceStatusIcon() { }
-     
     }
 }
