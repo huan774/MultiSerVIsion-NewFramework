@@ -12,6 +12,8 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -36,6 +38,9 @@
     <Reference Include="halcondotnet">
       <HintPath>..\..\..\HALCON\bin\dotnet35\halcondotnet.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=10.0.0.9, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.10.0.9\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="MvCameraControl.Net">
       <HintPath>C:\Program Files (x86)\MVS\Development\DotNet\win64\net40\MvCameraControl.Net.dll</HintPath>
     </Reference>
@@ -44,8 +49,34 @@
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.dll</HintPath>
     </Reference>
+    <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.6.1\lib\net462\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
+    <Reference Include="System.IO.Pipelines, Version=10.0.0.9, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Pipelines.10.0.9\lib\net462\System.IO.Pipelines.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.6.3\lib\net462\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.6.1\lib\net462\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=10.0.0.9, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.10.0.9\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=10.0.0.9, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.10.0.9\lib\net462\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.6.3\lib\net462\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,6 +89,19 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Solution\Application\DeviceAppService.cs" />
+    <Compile Include="Solution\Application\Dtos\DeviceCreateInput.cs" />
+    <Compile Include="Solution\Application\Dtos\DeviceUpdateIput.cs" />
+    <Compile Include="Solution\Application\IDeviceAppService.cs" />
+    <Compile Include="Solution\Domain\Entities\DeviceEntity.cs" />
+    <Compile Include="Solution\Domain\Models\OperationResult.cs" />
+    <Compile Include="Solution\Domain\Models\ValidationResult.cs" />
+    <Compile Include="Solution\Domain\Repositories\IDeviceRepository.cs" />
+    <Compile Include="Solution\Domain\Services\DeviceDomainService.cs" />
+    <Compile Include="Solution\Domain\Services\IDeviceDomainSerivce.cs" />
+    <Compile Include="Solution\Infrastructure\Repository\DeviceRepository.cs" />
+    <Compile Include="Solution\Presentation\Presenter\DeviceDetailPresenter.cs" />
+    <Compile Include="Solution\Presentation\Presenter\DeviceTressPresenter.cs" />
     <Compile Include="Solution\Presentation\UserControls\BaseViewUc.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -88,6 +132,8 @@
     <Compile Include="Solution\Presentation\UserControls\UCVisionView.Designer.cs">
       <DependentUpon>UCVisionView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Solution\Presentation\Views\IDeviceDatailView.cs" />
+    <Compile Include="Solution\Presentation\Views\IDeviceTreeView.cs" />
     <Compile Include="Solution\Presentation\Winforms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,6 +148,13 @@
     <Compile Include="Solution\Presentation\Winforms\FrmAddDevice.Designer.cs">
       <DependentUpon>FrmAddDevice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Solution\Shared\Exceptions\DeviceNotFoundException.cs" />
+    <Compile Include="Solution\Shared\GlobalConst.cs" />
+    <Compile Include="Solution\Shared\Helpers\FileloHelper.cs" />
+    <Compile Include="Solution\Shared\Helpers\JsonConfigHelper.cs" />
+    <Compile Include="Solution\Shared\Helpers\LogHelper.cs" />
+    <Compile Include="Solution\Shared\Models\OperationResult.cs" />
+    <Compile Include="Solution\Shared\Models\ValidationResult.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -129,6 +182,7 @@
     <EmbeddedResource Include="Solution\Presentation\Winforms\FrmAddDevice.resx">
       <DependentUpon>FrmAddDevice.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -142,11 +196,13 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Solution\Application\" />
-    <Folder Include="Solution\Domain\" />
-    <Folder Include="Solution\Infrastructure\" />
-    <Folder Include="Solution\Shared\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\System.ValueTuple.4.6.2\build\net471\System.ValueTuple.targets" Condition="Exists('..\packages\System.ValueTuple.4.6.2\build\net471\System.ValueTuple.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.ValueTuple.4.6.2\build\net471\System.ValueTuple.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.ValueTuple.4.6.2\build\net471\System.ValueTuple.targets'))" />
+  </Target>
 </Project>

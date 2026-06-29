@@ -1,4 +1,10 @@
-﻿using MultiSerVIsion.Solution.Presentation.UserControls;
+﻿using MultiSerVIsion.Solution.Application;
+using MultiSerVIsion.Solution.Domain.Repositories;
+using MultiSerVIsion.Solution.Domain.Services;
+using MultiSerVIsion.Solution.Infrastructure.Repository;
+using MultiSerVIsion.Solution.Presentation.Presenter;
+using MultiSerVIsion.Solution.Presentation.UserControls;
+using MultiSerVIsion.Solution.Presentation.Views;
 using MultiSerVIsion.Solution.Presentation.Winforms;
 using System;
 using System.Collections.Generic;
@@ -26,7 +32,9 @@ namespace MultiSerVIsion
         {
             InitializeComponent();
             InitLayoutSplit();
-            InitDeviceTree();
+            /*   InitDeviceTree();*/
+            InitPresent();
+            
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -34,6 +42,36 @@ namespace MultiSerVIsion
             var firstTap = tabControl1.SelectedTab;
             CreateViewIfNotExist(firstTap);
             SwitchTabView(firstTap);
+        }
+
+        private void InitPresent()
+        {
+            IDeviceRepository repo = new DeviceRepository();
+            IDeviceDomainSerivce domainSve = new DeviceDomainService();
+            IDeviceAppService appSvc = new DeviceAppService(repo, domainSve);
+
+            IDeviceTreeView treeView = new DeviceTreeUC();
+            IDeviceDatailView detailView = new DeviceDateilUC();
+
+
+            var treePresenter = new DeviceTressPresenter(treeView, appSvc);
+            var detailPresenter = new DeviceDetailPresenter(detailView, appSvc);
+
+            split_outer.Panel1.Controls.Add(treeView as DeviceTreeUC);
+            /*split_inter.Panel2.Controls.Add(detailView as DeviceDateilUC);*/
+
+            treeView.DeviceNodeSelected += devId =>
+            {
+                detailPresenter.LoadDevice(devId);
+                split_inter.Panel2.Controls.Add(detailView as DeviceDateilUC);
+                split_inter.SplitterDistance = split_inter.Width - DatailPanelWidth;
+            };
+            treeView.DeviceNodeUnSelect += () =>
+            {
+                detailPresenter.ClearEdit();
+                split_inter.SplitterDistance = split_inter.Width;
+            };
+           
         }
         private void InitLayoutSplit()
         {
@@ -43,13 +81,13 @@ namespace MultiSerVIsion
 
             split_inter.Dock = DockStyle.Fill;
             split_inter.FixedPanel = FixedPanel.None;
-            split_inter.SplitterDistance = split_inter.Width - DatailPanelWidth;
-
             split_inter.SplitterDistance = split_inter.Width;
 
             tabControl1.Dock = DockStyle.Fill;
             split_inter.Panel1.Controls.Add(tabControl1);
         }
+
+/*
         private void InitDeviceTree()
         {
             _treeUC = new DeviceTreeUC();
@@ -59,21 +97,17 @@ namespace MultiSerVIsion
             _treeUC.OnViewShow();
 
             _treeUC.DeviceNodeSelected += OnDeviceNodeSelected;
-            _treeUC.DeviceNodeUnSelect += OndeviceNodeUnSelect;
-            _treeUC.AddDeviceRequest += OnAddDeviceRequest;
-            _treeUC.RemoveDeviceRequest += OnRemoveDeviceRequest;
-            _treeUC.CopyDeviceRequest += OnCopyDeviceRequest;
-            _treeUC.ToggleDeviceEnableRequest += OnToggleDeviceEnableRequest;
+            _treeUC.DeviceNodeUnSelect += OnDeviceNodeUnSelect;  
+           
+
+           *//* _treeUC.GetDeviceStatus = GetDeviceStatusInfo;*//*
 
             _treeUC.OnViewShow();
         }
-     /*   private bool GetDeviceEnableState(string deviceId)
-        {
-            return DeviceService.IsDeviceEnable(deviceId);
-        }*/
+        
+
         private void OnDeviceNodeSelected(string deviceId)
         {
-            
             if (_detailUC == null)
             {
                 _detailUC= new DeviceDateilUC();
@@ -91,55 +125,8 @@ namespace MultiSerVIsion
                 _detailUC.SetUIPlaceholder();
             }
         }
-        private void OnAddDeviceRequest()
-        {
-           string groupKey = _treeUC.GetRightClickGroupKey();
-           if (string.IsNullOrEmpty(groupKey))
-            {
-                MessageBox.Show("请右键左侧分组后再添加设备");
-                return;
-            }
-            using (FrmAddDevice dialog = new FrmAddDevice())
-            {
-                dialog.TargetGroupId = groupKey;
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                   /* var newDeviceInfo = dialog.GetInput();
-                    string newDevId = DeviceService.CreateDevice(newDeviceInfo);
-                    _treeUC.AddTreeNode(newDeviceInfo.GroupId, newDevId, newDeviceInfo.DeviceName);*/
-                }
-            }
-        
-        }
-        private void OnRemoveDeviceRequest(string deviceId)
-        {
-            DialogResult res= MessageBox.Show($"确认删除设备 {deviceId}? 删除后配置将丢失","确认删除",
-                MessageBoxButtons.YesNo,MessageBoxIcon.Warning);
-
-            if (res != DialogResult.Yes)
-                return;
-
-        /*    DeviceSerive.DeleteDevice(deviceId);*/
-            _treeUC.RemoveTreeNode(deviceId);
-            _treeUC.ClearSelectNode();
-        }
-        private void OnDeviceConfigSaved(string  deviceId,Dictionary<string,string> config)
-        {
-       /*     DeviceSerive.SaveDeviceConfig(deviceId, config);
-            var dev=DeviceService.GetDevice(deviceId);
-            _treeUC.RefreshDeviceStatuesIcon();*/
-        }
-        private void OnCopyDeviceRequest(string sourceDevId)
-        {
-           /*string newId=DeviceService.CopyDevice(sourceDevId);
-            var deviceModel=DeviceService.GetDeviceModel(newId);
-            _treeUC.AddTreeNode(deviceModel.GroupId, newId, $"{deviceModel.Name}_副本");*/
-        }
-        private void OnToggleDeviceEnableRequest(string deviceId)
-        {
-          /*  DeviceService.ToggleDeviceEnable(deviceId);
-            _treeUC.refreshDeviceStatusIcon();*/
-        }
+       
+       
         private void OndeviceNodeUnSelect()
         {
             if (_detailUC != null)
@@ -148,6 +135,9 @@ namespace MultiSerVIsion
             }
             split_inter.SplitterDistance = split_inter.Width; 
         }
+*/
+
+        
 
         private void CreateViewIfNotExist(TabPage targetTab)
         {
@@ -164,6 +154,7 @@ namespace MultiSerVIsion
                     view=new UCVisionView();
                     var vision=view as UCVisionView;
                     vision.ExposureValueChanged += Vision_ExposureChanged;
+                   
                     break;
 
             }
@@ -230,9 +221,9 @@ namespace MultiSerVIsion
             {
                 uc.Dispose();
             }
-            _treeUC.Dispose();
+            /*_treeUC.Dispose();
             _viewCache.Clear();
-            _detailUC?.Dispose();
+            _detailUC?.Dispose();*/
         }
         private void Vision_ExposureChanged(object sender, EventArgs e)
         {

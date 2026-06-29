@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MultiSerVIsion.Solution.Application.Dtos;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -60,23 +61,28 @@ namespace MultiSerVIsion.Solution.Presentation.Winforms
             }
             return new DeviceCreateInput
             {
-                GroupId = TargetGroupId,
+                GroupTag = TargetGroupId,
                 DeviceName = txtDevNama.Text.Trim(),
                 IpAddress = txtDevIp.Text.Trim(),
                 DeviceType = typeKey,
-
             };
                
         }
     }
  
-    public class DeviceCreateInput
+  /*  public class DeviceCreateInput
     {
-        public string GroupId { get; set; }
-        public string DeviceName { get; set; }
-        public string IpAddress { get; set; }
-        public string DeviceType { get; set; }
+        *//* public string GroupId { get; set; }
+         public string DeviceName { get; set; }
+         public string IpAddress { get; set; }
+         public string DeviceType { get; set; }*//*
 
-    }
+        public string DeviceName { get; set; } = string.Empty;
+        public string DeviceType { get; set; } = string.Empty;
+        public string GroupId { get; set; } = string.Empty;
+        public string IpAddress { get; set; } = string.Empty;
+        public bool IsEnable { get; set; }
+
+    }*/
 
 }

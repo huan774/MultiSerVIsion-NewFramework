@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MultiSerVIsion.Solution.Presentation.Views;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,11 +12,12 @@ using System.Windows.Forms;
 
 namespace MultiSerVIsion.Solution.Presentation.UserControls
 {
-    public partial class DeviceTreeUC : BaseViewUc
+    public partial class DeviceTreeUC : BaseViewUc,IDeviceTreeView
     {
-        private TreeNode _rightClickGroupNode;
-        private TreeNode _rightClickNode=null;
+        /*private TreeNode _rightClickGroupNode;
+        private TreeNode _rightClickNode;*/
         private Func<string, bool> GetDeviceEnableStatus {  get; set; }
+        public Func<string,(bool Enable,bool Online)> GetDeviceStatus {  get; set; }
 
         public event Action<string> DeviceNodeSelected;
         public event Action DeviceNodeUnSelect;
@@ -23,9 +25,15 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
         public event Action<string> RemoveDeviceRequest;
         public event Action<string> CopyDeviceRequest;
         public event Action<string> ToggleDeviceEnableRequest;
+
+        private TreeNode _rightClickGroupNode;
+        private TreeNode _rightClickNode;
         public DeviceTreeUC()
         {
             InitializeComponent();
+            SetUIPlaceholder();
+
+            this.Dock = DockStyle.Fill;
 
             treeView_Device.ContextMenuStrip = contextMenuStrip_Device;
             treeView_Device.NodeMouseClick += TreeView_Device_NodeMouseClick;
@@ -72,7 +80,7 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
                 _rightClickNode = null;
                 _rightClickGroupNode= null;
 
-                string nodeTage=e.Node.Tag?.ToString();
+                string nodeTage=e.Node.Tag?.ToString() ?? string.Empty;
                 if (nodeTage != null && !nodeTage.StartsWith("Group_"))
                 {
                     RaiseDeviceUnSelect();
@@ -90,7 +98,7 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
             } 
             else if(e.Button == MouseButtons.Right)
             {
-                string tag = e.Node.Tag?.ToString() ?? "";
+                string tag = e.Node.Tag?.ToString() ?? string.Empty;
                 if (tag.StartsWith("Group_"))
                 {
                     _rightClickGroupNode=e.Node;
@@ -100,7 +108,6 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
                 {
                     _rightClickNode = e.Node;
                     _rightClickGroupNode = e.Node.Parent;
-                    
                 }
             }
         }
@@ -123,10 +130,10 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
             tsmi_EnableDisable.Visible = isDeviceNode;
             tsmi_Delete.Visible = isDeviceNode;
 
-            if (isDeviceNode && GetDeviceEnableStatus != null)
+            if (isDeviceNode && GetDeviceStatus != null)
             {
                 string devId = rightNode.Tag.ToString();
-                bool enable=GetDeviceEnableStatus(devId);
+                var (enable,_)=GetDeviceStatus(devId);
                 tsmi_EnableDisable.Text = enable ? "禁用设备" : "启动设备";
             }
         }
@@ -149,50 +156,64 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
         }
         private void Tsim_Copy_Click(object sender, EventArgs e)
         {
-            var node = _rightClickNode;
-            if (node?.Tag is string deviceId)
+            
+            if (_rightClickNode?.Tag is string deviceId)
             {
                 RaiseCopyDevice(deviceId);
             }
         }
         private void Tsmi_EnableDisable_Click(object sender, EventArgs e)
         {
-            var node = _rightClickNode;
-            if(node?.Tag is string deviceId)
+            
+            if(_rightClickNode?.Tag is string deviceId)
             {
                 RaiseToggleEnable(deviceId);
             }
         }
         private void Tsmi_Delete_Click(object sender,EventArgs e)
         {
-           var node=_rightClickNode;
-            if( node?.Tag is string deviceId)
+           
+            if(_rightClickNode?.Tag is string deviceId)
             {
                 RaiseRemoveDevice(deviceId);
             }
         }
-        public void AddTreeNode(string parentKey,string deviceId,string text)
+        public void AddTreeNode(string groupTag,string devId,string deveName)
         {
 
-            TreeNode targetGroup = null;
-            foreach (TreeNode rootNode in treeView_Device.Nodes)
+            TreeNode GroupNode = null;
+            foreach (TreeNode g in treeView_Device.Nodes)
             {
-                if (rootNode.Tag?.ToString() == parentKey)
+                if (g.Tag?.ToString() == groupTag)
                 {
-                    targetGroup = rootNode;
+                    GroupNode = g;
                     break;
                 }
-            }if (targetGroup == null) return;
+            }
 
-            TreeNode devNode = new TreeNode(deviceId);
-            devNode.Tag = deviceId;
-            targetGroup.Nodes.Add(devNode);
-            targetGroup.Expand();
+            if(GroupNode == null) return;
+
+            TreeNode devNode = new TreeNode(deveName) { Tag = devId };
+           
+            GroupNode.Nodes.Add(devNode);
+            GroupNode.Expand();
+            MessageBox.Show("添加设备111");
         }
-        public void RemoveTreeNode(string deviceid)
+        public void RemoveTreeNode(string devid)
         {
-            var node = FindNode(treeView_Device.Nodes, deviceid);
-            node?.Remove();
+
+            foreach(TreeNode g in treeView_Device.Nodes)
+            {
+                for(int i=g.Nodes.Count-1; i>=0; i--)
+                {
+                    TreeNode n = g.Nodes[i];
+                    if(n.Tag!=null && n.Tag.ToString() == devid)
+                    {
+                        n.Remove();
+                        return;
+                    }
+                }
+            }
         }
         private TreeNode FindNode(TreeNodeCollection nodes, string tag)
         {
@@ -203,6 +224,10 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
                 if (child != null) return child;
             }
             return null;
+        }
+        public bool ShowConfirmDialog(string msg)
+        {
+            return MessageBox.Show(msg, "提示", MessageBoxButtons.YesNo) == DialogResult.Yes;
         }
         public string GetRightClickGroupKey()
         {
@@ -220,6 +245,7 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
             treeView_Device.Nodes.Add("相机分组").Tag = "Group_Camera";
             treeView_Device.Nodes.Add("运动轴分组").Tag = "Group_Motion";
             treeView_Device.Nodes.Add("PLC分组").Tag = "Group_PLCser";
+            
         }
         public void ClearSelectNode()
         {
@@ -227,6 +253,41 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
             _rightClickNode= null;
             RaiseDeviceUnSelect();
         }
-        private void RefreshDeviceStatusIcon() { }
+
+        public void ShowMessage(string msg)
+        {
+            MessageBox.Show(msg);
+        }
+        public void RefreshDeviceStatusIcon() {
+
+            if (GetDeviceStatus == null) return;
+
+            foreach (TreeNode groupNode in treeView_Device.Nodes)
+            {
+                foreach (TreeNode node in groupNode.Nodes)
+                {
+                    string devId = node.Tag?.ToString();
+                    if (string.IsNullOrEmpty(devId)) continue;
+
+                    var (enable, onlie) = GetDeviceStatus(devId);
+                    if (!enable)
+                    {
+                        node.ImageIndex = 1;
+                        node.SelectedImageIndex = 1;
+
+                    }
+                    else if (!onlie)
+                    {
+                        node.ImageIndex = 2;
+                        node.SelectedImageIndex = 2;
+                    }
+                    else
+                    {
+                        node.ImageIndex = 0;
+                        node.SelectedImageIndex = 0;
+                    }
+                }
+            }
+        }
     }
 }

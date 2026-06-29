@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MultiSerVIsion.Solution.Domain.Entities;
+using MultiSerVIsion.Solution.Presentation.Views;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,47 +12,71 @@ using System.Windows.Forms;
 
 namespace MultiSerVIsion.Solution.Presentation.UserControls
 {
-    public partial class DeviceDateilUC : BaseViewUc
+    public partial class DeviceDateilUC : BaseViewUc,IDeviceDatailView
     {
         public event Action<string, Dictionary<string, string>> OnDeviceConfigSave;
         private string _currentDeviceId;
+
+        public event Action SaveConfigRequest;
+        public event Action ClearRequest;
         public DeviceDateilUC()
         {
             InitializeComponent();
-            btn_SaveConfig.Click += Btn_SaveConfig_Click;
+            this.Dock= DockStyle.Fill;
+           /* btn_SaveConfig.Click += Btn_SaveConfig_Click;*/
         }
-        public void LoadDeviceInfo(string deviceId, Dictionary<string, string> config)
-        {
-            _currentDeviceId = deviceId;
-            txt_DeviceName.Text = config["Name"];
-            txt_Ip.Text = config["Ip"];
-            cbx_Protocol.Text = config["Protocol"];
-           /* chk_Enable.Checked = config["IsEnable"] = "1";*/
 
-        }
-        private void Btn_SaveConfig_Click(object sender, EventArgs e)
+        private void btn_SaveConfig_Click(object sender, EventArgs e)
         {
-            var cfg = new Dictionary<string, string>()
-            {
-                ["Name"] = txt_DeviceName.Text,
-                ["IP"] = txt_Ip.Text,
-                ["Protocol"] = cbx_Protocol.Text,
-              /*  ["IsEnable"] = chk_Enable.Checked ? "1" : "0"*/
-            };
-            OnDeviceConfigSave?.Invoke(_currentDeviceId, cfg);
+            SaveConfigRequest?.Invoke();
         }
-        public override void OnViewShow()
+        public void LoadDeviceData(DeviceEntity device)
         {
-            base.OnViewShow();
+            txt_DeviceName.Text = device.DeviceName;
+            txt_Ip.Text = device.IpAddress;
+            cbx_Protocol.Text=device.DeviceType.ToString();
+           /* chk_Enable.CheckedItems = device.IsEnable;*/
         }
-        public override void SetUIPlaceholder()
+        public void ClearPanel()
         {
             txt_DeviceName.Clear();
             txt_Ip.Clear();
-            cbx_Protocol.Text = "";
-           /* chk_Enable.Checked = false;*/
-            _currentDeviceId = null;
+            /*cbx_Protocol.SelectedIndex = 0;*/
+            /*chk_Enable.CheckedItems = false;*/
+            SetEditDisable();
         }
-      
+        public void SetEditDisable()
+        {
+            txt_DeviceName.ReadOnly = true;
+            txt_Ip.ReadOnly = true;
+            cbx_Protocol.Enabled = false;
+            btn_SaveConfig.Enabled = false;
+        }
+        public void SetEditEnable()
+        {
+            txt_DeviceName.ReadOnly=false;
+            txt_Ip.ReadOnly=false;
+            cbx_Protocol.Enabled=true;
+            btn_SaveConfig.Enabled=true;
+        }
+        public DeviceEntity GetEditInput()
+        {
+            return new DeviceEntity
+            {
+                DeviceId = txt_DeviceName.Text.Trim(),
+                IpAddress = txt_Ip.Text.Trim(),
+                DeviceType = cbx_Protocol.Text.Trim(),
+             /*   IsEnable = chk_Enable.Chrcked*/
+            };
+
+        }
+        public void ShowMessage(string message) { MessageBox.Show(this,message); }
+        public bool ShowConfirmDialog(string  message) { return MessageBox.Show(this,message,"提示",MessageBoxButtons.YesNo)==DialogResult.Yes; }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            ClearRequest?.Invoke();
+        }
+       
     }
 }
