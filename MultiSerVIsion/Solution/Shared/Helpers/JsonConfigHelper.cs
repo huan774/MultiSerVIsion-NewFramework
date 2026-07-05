@@ -15,7 +15,8 @@ namespace MultiSerVIsion.Solution.Shared.Helpers
             {
                 WriteIndented = true,
                 AllowTrailingCommas = true,
-                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Default
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                PropertyNameCaseInsensitive = true,
             };
         }
         public static readonly JsonSerializerOptions Default=GetDefaultOptions();

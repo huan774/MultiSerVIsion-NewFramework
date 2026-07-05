@@ -93,7 +93,11 @@
     <Compile Include="Solution\Application\Dtos\DeviceCreateInput.cs" />
     <Compile Include="Solution\Application\Dtos\DeviceUpdateIput.cs" />
     <Compile Include="Solution\Application\IDeviceAppService.cs" />
+    <Compile Include="Solution\Domain\Entities\Configs\CameraConnectConfig.cs" />
+    <Compile Include="Solution\Domain\Entities\Configs\MotionCardConnectConfig.cs" />
+    <Compile Include="Solution\Domain\Entities\Configs\PlcconnectConfig.cs" />
     <Compile Include="Solution\Domain\Entities\DeviceEntity.cs" />
+    <Compile Include="Solution\Domain\Enums\DeviceCategory.cs" />
     <Compile Include="Solution\Domain\Models\OperationResult.cs" />
     <Compile Include="Solution\Domain\Models\ValidationResult.cs" />
     <Compile Include="Solution\Domain\Repositories\IDeviceRepository.cs" />
@@ -102,23 +106,36 @@
     <Compile Include="Solution\Infrastructure\Repository\DeviceRepository.cs" />
     <Compile Include="Solution\Presentation\Presenter\DeviceDetailPresenter.cs" />
     <Compile Include="Solution\Presentation\Presenter\DeviceTressPresenter.cs" />
+    <Compile Include="Solution\Presentation\Presenter\Factory\DeviceDetailView.cs" />
     <Compile Include="Solution\Presentation\UserControls\BaseViewUc.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Solution\Presentation\UserControls\BaseViewUc.Designer.cs">
       <DependentUpon>BaseViewUc.cs</DependentUpon>
     </Compile>
-    <Compile Include="Solution\Presentation\UserControls\DeviceDateilUC.cs">
+    <Compile Include="Solution\Presentation\UserControls\CameraDateilUC.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Solution\Presentation\UserControls\DeviceDateilUC.Designer.cs">
-      <DependentUpon>DeviceDateilUC.cs</DependentUpon>
+    <Compile Include="Solution\Presentation\UserControls\CameraDateilUC.Designer.cs">
+      <DependentUpon>CameraDateilUC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Solution\Presentation\UserControls\CardDetailUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Solution\Presentation\UserControls\CardDetailUC.Designer.cs">
+      <DependentUpon>CardDetailUC.cs</DependentUpon>
     </Compile>
     <Compile Include="Solution\Presentation\UserControls\DeviceTreeUC.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Solution\Presentation\UserControls\DeviceTreeUC.Designer.cs">
       <DependentUpon>DeviceTreeUC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Solution\Presentation\UserControls\PlcDetailUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Solution\Presentation\UserControls\PlcDetailUC.Designer.cs">
+      <DependentUpon>PlcDetailUC.cs</DependentUpon>
     </Compile>
     <Compile Include="Solution\Presentation\UserControls\UCMonitorView.cs">
       <SubType>UserControl</SubType>
@@ -164,11 +181,17 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Solution\Presentation\UserControls\DeviceDateilUC.resx">
-      <DependentUpon>DeviceDateilUC.cs</DependentUpon>
+    <EmbeddedResource Include="Solution\Presentation\UserControls\CameraDateilUC.resx">
+      <DependentUpon>CameraDateilUC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Solution\Presentation\UserControls\CardDetailUC.resx">
+      <DependentUpon>CardDetailUC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Solution\Presentation\UserControls\DeviceTreeUC.resx">
       <DependentUpon>DeviceTreeUC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Solution\Presentation\UserControls\PlcDetailUC.resx">
+      <DependentUpon>PlcDetailUC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Solution\Presentation\UserControls\UCMonitorView.resx">
       <DependentUpon>UCMonitorView.cs</DependentUpon>

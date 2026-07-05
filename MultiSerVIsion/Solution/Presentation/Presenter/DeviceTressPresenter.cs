@@ -4,6 +4,8 @@ using MultiSerVIsion.Solution.Domain.Entities;
 using MultiSerVIsion.Solution.Presentation.UserControls;
 using MultiSerVIsion.Solution.Presentation.Views;
 using MultiSerVIsion.Solution.Presentation.Winforms;
+using MultiSerVIsion.Solution.Shared.Exceptions;
+using MultiSerVIsion.Solution.Shared.Helpers;
 using MultiSerVIsion.Solution.Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -30,8 +32,31 @@ namespace MultiSerVIsion.Solution.Presentation.Presenter
             _view.RemoveDeviceRequest += OnRemoveDeviceRequest;
             _view.CopyDeviceRequest += OnCopyDeviceRequest;
             _view.ToggleDeviceEnableRequest += OnToggleDeviceEnableRequest;
+
+
+            LoadAllDeviceOnStart();
         }
-        
+        private void LoadAllDeviceOnStart()
+        {
+            try
+            {
+                var result = _appService.GetAllDevices();
+                if (!result.Success || result.Data == null)
+                {
+                    _view.ShowMessage("设备数据加载失败：" + result.Message);
+                    return;
+                }
+                foreach (var device in result.Data)
+                {
+                    _view.AddTreeNode(device.GroupTage, device.DeviceId, device.DeviceName);
+                }
+                _view.RefreshDeviceStatusIcon();
+            }
+            catch (Exception ex)
+            {
+                _view?.ShowMessage($"加载设备异常{ex.Message}");
+            }
+        }
         private void OnAddDeviceRequest()
         {
             string groupId = _view.GetRightClickGroupKey();
@@ -42,20 +67,37 @@ namespace MultiSerVIsion.Solution.Presentation.Presenter
             }
             using (FrmAddDevice frm = new FrmAddDevice())
             {
-                frm.TargetGroupId = groupId;
-                if (frm.ShowDialog() == DialogResult.OK)
+                try
                 {
-                    DeviceCreateInput input = frm.GetInput();
-                    OperationResult<DeviceEntity> res = _appService.CreateDevice(input);
-                    if(res.Success && res.Data!=null)
+                    frm.TargetGroupId = groupId;
+
+
+                    if (frm.ShowDialog() == DialogResult.OK)
                     {
-                        _view.AddTreeNode(input.GroupTag, res.Data.DeviceId, res.Data.DeviceName);
-                        _view.RefreshDeviceStatusIcon();
+                        DeviceCreateInput input = frm.GetInput();
+                        OperationResult<DeviceEntity> res = _appService.CreateDevice(input);
+
+                        if (res.Success && res.Data != null)
+                        {
+                            _view.AddTreeNode(input.GroupTag, res.Data.DeviceId, res.Data.DeviceName);
+
+                            _view.RefreshDeviceStatusIcon();
+                        }
+                        else
+                        {
+                            _view.ShowMessage(res.Message);
+                        }
                     }
-                    else
-                    {
-                        _view.ShowMessage(res.Message);
-                    }
+                }
+                catch (StorageIoException ex)
+                {
+                    _view.ShowMessage($"JSON写入失败：{ex.Message}");
+                    LogHelper.Error("复制设备写入JSON失败", ex);
+                }
+                catch (Exception ex)
+                {
+                    _view.ShowMessage($"操作异常：{ex.Message}");
+                    LogHelper.Error("复制设备未知异常", ex);
                 }
             }
         }

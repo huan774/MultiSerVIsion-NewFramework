@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MultiSerVIsion.Solution.Domain.Entities.Configs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,12 +16,25 @@ namespace MultiSerVIsion.Solution.Domain.Entities
         public string IpAddress {  get; set; }
         public string DeviceType {  get; set; }
         public bool IsEnable {  get; set; }
+      /*  public Dictionary<string, string> ExtParams { get; set; } = new Dictionary<string, string>();
+        public  static class ExtParamHelper
+        {
+            public static int GetValueOrDefault(this Dictionary<string, string> dict, string key, int defaultValue)
+            {
+                if (dict.TryGetValue(key, out var val) && int.TryParse(val, out int num))
+                    return num;
+                return defaultValue;
+            }
+        }*/
 
+        public PlcconnectConfig PlcConfig {  get; set; }
+        public CameraConnectConfig CameraConfig {  get; set; }
+        public MotionCardConnectConfig MotionConfig { get; set; }
         public DeviceEntity ShallowClone()
         {
             return new DeviceEntity
             {
-                DeviceId = "",
+                DeviceId =this.DeviceId,
                 GroupTage=this.GroupTage,
                 DeviceName=this.DeviceName,
                 IpAddress=this.IpAddress,
@@ -29,7 +43,6 @@ namespace MultiSerVIsion.Solution.Domain.Entities
             };
 
         }
-      
         public Shared.Models.ValidationResult SelfValidate()
         {
             if (string.IsNullOrWhiteSpace(DeviceName) || DeviceName.Length > 64)
@@ -48,6 +61,5 @@ namespace MultiSerVIsion.Solution.Domain.Entities
             if (arr.Length != 4) return false;
             return arr.All(x => byte.TryParse(x, out var num) && num <= 255);
         }
-
     }
 }

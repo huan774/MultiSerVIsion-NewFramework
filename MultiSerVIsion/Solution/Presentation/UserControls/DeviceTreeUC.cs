@@ -14,8 +14,7 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
 {
     public partial class DeviceTreeUC : BaseViewUc,IDeviceTreeView
     {
-        /*private TreeNode _rightClickGroupNode;
-        private TreeNode _rightClickNode;*/
+       
         private Func<string, bool> GetDeviceEnableStatus {  get; set; }
         public Func<string,(bool Enable,bool Online)> GetDeviceStatus {  get; set; }
 
@@ -36,9 +35,9 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
             this.Dock = DockStyle.Fill;
 
             treeView_Device.ContextMenuStrip = contextMenuStrip_Device;
+            treeView_Device.MouseDown += TreeView_MouseDown;
             treeView_Device.NodeMouseClick += TreeView_Device_NodeMouseClick;
             contextMenuStrip_Device.Opening += ContextMenuStrip_Device_Opening;
-            contextMenuStrip_Device.Closed += (s, e) => _rightClickNode = null;
 
             btn_AddDevice.Click += Btn_AddDevice_Click;
             btn_DelDevice.Click += Btn_DelDevice_Click;
@@ -73,23 +72,43 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
         {
             ToggleDeviceEnableRequest?.Invoke(devId);
         }
+        private void TreeView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            var node=treeView_Device.GetNodeAt(e.X, e.Y);
+
+            if(node == null) return;
+
+            treeView_Device.SelectedNode = node;
+            _rightClickNode=node;
+            string tar =node.Tag?.ToString()?? string.Empty;
+            bool isGroupNode = tar.StartsWith("Group_");
+
+            tsmi_AddChild.Visible = isGroupNode;
+            tsmi_Copy.Visible = !isGroupNode;
+            tsmi_Delete.Visible = !isGroupNode   ;
+            tsmi_EnableDisable.Visible = !isGroupNode;
+
+        }
         private void TreeView_Device_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+      
+         if (e.Button == MouseButtons.Left)
             {
                 _rightClickNode = null;
                 _rightClickGroupNode= null;
-
+               
                 string nodeTage=e.Node.Tag?.ToString() ?? string.Empty;
-                if (nodeTage != null && !nodeTage.StartsWith("Group_"))
+                if (nodeTage != null && nodeTage.StartsWith("Group_"))
                 {
                     RaiseDeviceUnSelect();
                 }
                 else if (!string.IsNullOrEmpty(nodeTage))
                 {
-                    RaiseDeviceSelected(nodeTage);
+                    
                     _rightClickGroupNode = e.Node.Parent;
                     _rightClickNode = e.Node;
+                    RaiseDeviceSelected(nodeTage);
                 }
                 else
                 {
@@ -150,16 +169,26 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
         }
         private void Tsim_AddChild_Click(object sender, EventArgs e)
         {
-           
             RaiseAddDevice();
-            
         }
         private void Tsim_Copy_Click(object sender, EventArgs e)
         {
             
-            if (_rightClickNode?.Tag is string deviceId)
+            if (_rightClickNode == null)
             {
-                RaiseCopyDevice(deviceId);
+                ShowMessage("未选中节点");
+                return;
+            }
+           
+            string tag = _rightClickNode.Tag?.ToString() ?? "";
+            if (tag.StartsWith("Group_"))
+            {
+                ShowMessage("分组不支持复制");
+                return;
+            }
+            if (!string.IsNullOrEmpty(tag))
+            {
+                RaiseCopyDevice(tag);
             }
         }
         private void Tsmi_EnableDisable_Click(object sender, EventArgs e)
@@ -197,7 +226,7 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
            
             GroupNode.Nodes.Add(devNode);
             GroupNode.Expand();
-            MessageBox.Show("添加设备111");
+
         }
         public void RemoveTreeNode(string devid)
         {
@@ -231,7 +260,6 @@ namespace MultiSerVIsion.Solution.Presentation.UserControls
         }
         public string GetRightClickGroupKey()
         {
-            MessageBox.Show("reture");
             return _rightClickGroupNode?.Tag?.ToString() ?? string.Empty;
         }
         public override void OnViewShow()

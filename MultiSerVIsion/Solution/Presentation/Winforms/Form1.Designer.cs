@@ -39,6 +39,7 @@
             this.toolStripLabel7 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripLabel8 = new System.Windows.Forms.ToolStripLabel();
             this.split_outer = new System.Windows.Forms.SplitContainer();
+            this.split_inter = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageMonitor = new System.Windows.Forms.TabPage();
@@ -49,7 +50,6 @@
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.tabPage7 = new System.Windows.Forms.TabPage();
             this.tabPage8 = new System.Windows.Forms.TabPage();
-            this.split_inter = new System.Windows.Forms.SplitContainer();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -62,14 +62,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.split_outer)).BeginInit();
             this.split_outer.Panel2.SuspendLayout();
             this.split_outer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.split_inter)).BeginInit();
+            this.split_inter.Panel1.SuspendLayout();
+            this.split_inter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.split_inter)).BeginInit();
-            this.split_inter.Panel1.SuspendLayout();
-            this.split_inter.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -105,48 +105,48 @@
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(0, 44);
+            this.toolStripLabel1.Size = new System.Drawing.Size(0, 31);
             // 
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(110, 44);
+            this.toolStripLabel2.Size = new System.Drawing.Size(110, 31);
             this.toolStripLabel2.Text = "软件名称";
             // 
             // toolStripLabel3
             // 
             this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(110, 44);
+            this.toolStripLabel3.Size = new System.Drawing.Size(110, 31);
             this.toolStripLabel3.Text = "当前用户";
             // 
             // toolStripLabel4
             // 
             this.toolStripLabel4.Name = "toolStripLabel4";
-            this.toolStripLabel4.Size = new System.Drawing.Size(110, 44);
+            this.toolStripLabel4.Size = new System.Drawing.Size(110, 31);
             this.toolStripLabel4.Text = "系统时间";
             // 
             // toolStripLabel5
             // 
             this.toolStripLabel5.Name = "toolStripLabel5";
-            this.toolStripLabel5.Size = new System.Drawing.Size(110, 44);
+            this.toolStripLabel5.Size = new System.Drawing.Size(110, 31);
             this.toolStripLabel5.Text = "相机触发";
             // 
             // toolStripLabel6
             // 
             this.toolStripLabel6.Name = "toolStripLabel6";
-            this.toolStripLabel6.Size = new System.Drawing.Size(110, 44);
+            this.toolStripLabel6.Size = new System.Drawing.Size(110, 31);
             this.toolStripLabel6.Text = "标定按钮";
             // 
             // toolStripLabel7
             // 
             this.toolStripLabel7.Name = "toolStripLabel7";
-            this.toolStripLabel7.Size = new System.Drawing.Size(62, 44);
+            this.toolStripLabel7.Size = new System.Drawing.Size(62, 31);
             this.toolStripLabel7.Text = "锁定";
             // 
             // toolStripLabel8
             // 
             this.toolStripLabel8.Name = "toolStripLabel8";
-            this.toolStripLabel8.Size = new System.Drawing.Size(62, 44);
+            this.toolStripLabel8.Size = new System.Drawing.Size(62, 31);
             this.toolStripLabel8.Text = "退出";
             // 
             // split_outer
@@ -168,6 +168,19 @@
             this.split_outer.Size = new System.Drawing.Size(1374, 789);
             this.split_outer.SplitterDistance = 220;
             this.split_outer.TabIndex = 1;
+            // 
+            // split_inter
+            // 
+            this.split_inter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.split_inter.Location = new System.Drawing.Point(0, 0);
+            this.split_inter.Name = "split_inter";
+            // 
+            // split_inter.Panel1
+            // 
+            this.split_inter.Panel1.Controls.Add(this.splitContainer2);
+            this.split_inter.Size = new System.Drawing.Size(1150, 789);
+            this.split_inter.SplitterDistance = 1000;
+            this.split_inter.TabIndex = 1;
             // 
             // splitContainer2
             // 
@@ -223,81 +236,68 @@
             // 
             // tabPageVision
             // 
-            this.tabPageVision.Location = new System.Drawing.Point(8, 45);
+            this.tabPageVision.Location = new System.Drawing.Point(8, 39);
             this.tabPageVision.Name = "tabPageVision";
             this.tabPageVision.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageVision.Size = new System.Drawing.Size(1134, 567);
+            this.tabPageVision.Size = new System.Drawing.Size(984, 638);
             this.tabPageVision.TabIndex = 1;
             this.tabPageVision.Text = "视觉图像";
             this.tabPageVision.UseVisualStyleBackColor = true;
             // 
             // tabPage3
             // 
-            this.tabPage3.Location = new System.Drawing.Point(8, 45);
+            this.tabPage3.Location = new System.Drawing.Point(8, 39);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1134, 567);
+            this.tabPage3.Size = new System.Drawing.Size(984, 638);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "标定配置";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // tabPage4
             // 
-            this.tabPage4.Location = new System.Drawing.Point(8, 45);
+            this.tabPage4.Location = new System.Drawing.Point(8, 39);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(1134, 567);
+            this.tabPage4.Size = new System.Drawing.Size(984, 638);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "算法配方";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // tabPage5
             // 
-            this.tabPage5.Location = new System.Drawing.Point(8, 45);
+            this.tabPage5.Location = new System.Drawing.Point(8, 39);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(1134, 567);
+            this.tabPage5.Size = new System.Drawing.Size(984, 638);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "运控参数";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // tabPage6
             // 
-            this.tabPage6.Location = new System.Drawing.Point(8, 45);
+            this.tabPage6.Location = new System.Drawing.Point(8, 39);
             this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(1134, 567);
+            this.tabPage6.Size = new System.Drawing.Size(984, 638);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "报警查询";
             this.tabPage6.UseVisualStyleBackColor = true;
             // 
             // tabPage7
             // 
-            this.tabPage7.Location = new System.Drawing.Point(8, 45);
+            this.tabPage7.Location = new System.Drawing.Point(8, 39);
             this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Size = new System.Drawing.Size(1134, 567);
+            this.tabPage7.Size = new System.Drawing.Size(984, 638);
             this.tabPage7.TabIndex = 6;
             this.tabPage7.Text = "历史数据";
             this.tabPage7.UseVisualStyleBackColor = true;
             // 
             // tabPage8
             // 
-            this.tabPage8.Location = new System.Drawing.Point(8, 45);
+            this.tabPage8.Location = new System.Drawing.Point(8, 39);
             this.tabPage8.Name = "tabPage8";
-            this.tabPage8.Size = new System.Drawing.Size(1134, 567);
+            this.tabPage8.Size = new System.Drawing.Size(984, 638);
             this.tabPage8.TabIndex = 7;
             this.tabPage8.Text = "系统通讯设置";
             this.tabPage8.UseVisualStyleBackColor = true;
-            // 
-            // split_inter
-            // 
-            this.split_inter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.split_inter.Location = new System.Drawing.Point(0, 0);
-            this.split_inter.Name = "split_inter";
-            // 
-            // split_inter.Panel1
-            // 
-            this.split_inter.Panel1.Controls.Add(this.splitContainer2);
-            this.split_inter.Size = new System.Drawing.Size(1150, 789);
-            this.split_inter.SplitterDistance = 1000;
-            this.split_inter.TabIndex = 1;
             // 
             // richTextBox1
             // 
@@ -365,7 +365,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "XhyVision";
+            this.Text = "HyVision  V1.0.0";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -376,15 +376,15 @@
             this.split_outer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.split_outer)).EndInit();
             this.split_outer.ResumeLayout(false);
+            this.split_inter.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.split_inter)).EndInit();
+            this.split_inter.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
-            this.split_inter.Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.split_inter)).EndInit();
-            this.split_inter.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);

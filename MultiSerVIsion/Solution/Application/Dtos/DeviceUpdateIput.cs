@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MultiSerVIsion.Solution.Domain.Entities.Configs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,9 @@ namespace MultiSerVIsion.Solution.Application.Dtos
         public string GroupTag { get; set; } = string.Empty;
         public string IpAddress { get; set; } = string.Empty;
         public bool IsEnable { get; set; }
+
+        public PlcconnectConfig PlcConfig {  get; set; }
+        public CameraConnectConfig CameraConfig {  get; set; }
+        public MotionCardConnectConfig MotionCardConfig { get; set; }
     }
 }

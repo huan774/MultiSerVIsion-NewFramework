@@ -1,18 +1,23 @@
 ﻿using MultiSerVIsion.Solution.Application;
+using MultiSerVIsion.Solution.Domain.Entities;
 using MultiSerVIsion.Solution.Domain.Repositories;
 using MultiSerVIsion.Solution.Domain.Services;
 using MultiSerVIsion.Solution.Infrastructure.Repository;
 using MultiSerVIsion.Solution.Presentation.Presenter;
+using MultiSerVIsion.Solution.Presentation.Presenter.Factory;
 using MultiSerVIsion.Solution.Presentation.UserControls;
 using MultiSerVIsion.Solution.Presentation.Views;
 using MultiSerVIsion.Solution.Presentation.Winforms;
+using MultiSerVIsion.Solution.Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -22,17 +27,18 @@ namespace MultiSerVIsion
     public partial class Form1 : Form
     {
         private readonly Dictionary<string, BaseViewUc> _viewCache = new Dictionary<string, BaseViewUc>();
+        private readonly Dictionary<string, UserControl> _cachedDetailUc = new Dictionary<string, UserControl>();
         private BaseViewUc _lastActiveView;
 
         private const int DatailPanelWidth = 300;
-        private DeviceTreeUC _treeUC;
-        private DeviceDateilUC _detailUC;
+
+        private readonly IDeviceDatailView _treeView;
+        private readonly DeviceTressPresenter _treePresent;
 
         public Form1()
         {
             InitializeComponent();
             InitLayoutSplit();
-            /*   InitDeviceTree();*/
             InitPresent();
             
         }
@@ -51,20 +57,42 @@ namespace MultiSerVIsion
             IDeviceAppService appSvc = new DeviceAppService(repo, domainSve);
 
             IDeviceTreeView treeView = new DeviceTreeUC();
-            IDeviceDatailView detailView = new DeviceDateilUC();
+            IDeviceDatailView detailView = new CameraDateilUC();
 
 
             var treePresenter = new DeviceTressPresenter(treeView, appSvc);
-            var detailPresenter = new DeviceDetailPresenter(detailView, appSvc);
+            var detailPresenter = new DeviceDetailPresenter(appSvc);
 
             split_outer.Panel1.Controls.Add(treeView as DeviceTreeUC);
-            /*split_inter.Panel2.Controls.Add(detailView as DeviceDateilUC);*/
+
+            detailPresenter.OnCreaateDetailUc += (System.Windows.Forms.UserControl uc) =>
+            {
+                split_inter.Panel2.SuspendLayout();
+               
+                try
+                {
+                    foreach (Control c in split_inter.Panel2.Controls)
+                    {
+                        if (c is UserControl existUc)
+                            existUc.Visible = false;
+                    }
+                    if (!split_inter.Panel2.Controls.Contains(uc))
+                    {
+                        uc.Dock = DockStyle.Fill;
+                        split_inter.Panel2.Controls.Add(uc);
+                    }
+                    uc.Visible = true;
+                    split_inter.SplitterDistance = split_inter.Width - DatailPanelWidth;
+                }
+                finally
+                {
+                    split_inter.Panel2.ResumeLayout(true);
+                }
+            };
 
             treeView.DeviceNodeSelected += devId =>
             {
                 detailPresenter.LoadDevice(devId);
-                split_inter.Panel2.Controls.Add(detailView as DeviceDateilUC);
-                split_inter.SplitterDistance = split_inter.Width - DatailPanelWidth;
             };
             treeView.DeviceNodeUnSelect += () =>
             {
@@ -87,58 +115,6 @@ namespace MultiSerVIsion
             split_inter.Panel1.Controls.Add(tabControl1);
         }
 
-/*
-        private void InitDeviceTree()
-        {
-            _treeUC = new DeviceTreeUC();
-            _treeUC.Dock = DockStyle.Fill;
-            split_outer.Panel1.Controls.Add( _treeUC );
-            _treeUC.SetUIPlaceholder();
-            _treeUC.OnViewShow();
-
-            _treeUC.DeviceNodeSelected += OnDeviceNodeSelected;
-            _treeUC.DeviceNodeUnSelect += OnDeviceNodeUnSelect;  
-           
-
-           *//* _treeUC.GetDeviceStatus = GetDeviceStatusInfo;*//*
-
-            _treeUC.OnViewShow();
-        }
-        
-
-        private void OnDeviceNodeSelected(string deviceId)
-        {
-            if (_detailUC == null)
-            {
-                _detailUC= new DeviceDateilUC();
-                _detailUC.Dock= DockStyle.Fill;
-                 split_inter.Panel2.Controls.Add( _detailUC );
-                _detailUC.OnDeviceConfigSave += OnDeviceConfigSaved;
-            }
-            split_inter.SplitterDistance = split_inter.Width - DatailPanelWidth;
-        }
-        private void OnDeviceNodeUnSelect()
-        {
-            split_inter.SplitterDistance = split_inter.Width;
-            if(_detailUC!= null)
-            {
-                _detailUC.SetUIPlaceholder();
-            }
-        }
-       
-       
-        private void OndeviceNodeUnSelect()
-        {
-            if (_detailUC != null)
-            {
-                _detailUC.SetUIPlaceholder();
-            }
-            split_inter.SplitterDistance = split_inter.Width; 
-        }
-*/
-
-        
-
         private void CreateViewIfNotExist(TabPage targetTab)
         {
             string tabKey = targetTab.Name;
@@ -154,9 +130,8 @@ namespace MultiSerVIsion
                     view=new UCVisionView();
                     var vision=view as UCVisionView;
                     vision.ExposureValueChanged += Vision_ExposureChanged;
-                   
+                    
                     break;
-
             }
             if(view==null) return;
             view.Dock = DockStyle.Fill;
@@ -229,5 +204,7 @@ namespace MultiSerVIsion
         {
             var vision = sender as UCVisionView;
         }
+
+        
     }
 }

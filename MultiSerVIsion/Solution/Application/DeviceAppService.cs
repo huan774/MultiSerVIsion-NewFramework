@@ -67,7 +67,7 @@ namespace MultiSerVIsion.Solution.Application
             {
                 var entity = new DeviceEntity
                 {
-                    DeviceId = Guid.NewGuid().ToString(),
+                    DeviceId = Guid.NewGuid().ToString("N"),
                     GroupTage = input.GroupTag,
                     DeviceName = input.DeviceName,
                     IpAddress = input.IpAddress,
@@ -183,10 +183,15 @@ namespace MultiSerVIsion.Solution.Application
                 if (target == null)
                     return OperationResult< DeviceEntity>.Fail($"设备{input.DeviceName}不存在");
 
+                target.DeviceId = input.DeviceId;
                 target.DeviceName = input.DeviceName;
                 target.IpAddress=input.IpAddress;
                 target.DeviceType = input.DeviceType;
                 target.IsEnable=input.IsEnable;
+
+                target.PlcConfig = input.PlcConfig;
+                target.MotionConfig = input.MotionCardConfig;
+                target.CameraConfig = input.CameraConfig;
 
                 _repo.Update(target);
                 return OperationResult<DeviceEntity>.Succes(target, target.GroupTage);

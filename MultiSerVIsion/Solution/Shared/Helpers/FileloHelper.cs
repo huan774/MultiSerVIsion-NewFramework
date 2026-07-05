@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MultiSerVIsion.Solution.Shared.Helpers
 {
@@ -20,15 +21,24 @@ namespace MultiSerVIsion.Solution.Shared.Helpers
                 try
                 {
                     if (!File.Exists(filePath))
-                        return Activator.CreateInstance<T>();
+                        /* return Activator.CreateInstance<T>();*/
+                        throw new FileNotFoundException("存储文件不存在", filePath);
 
                     string json = File.ReadAllText(filePath);
-                    return JsonSerializer.Deserialize<T>(json, options);
+                    var result=JsonSerializer.Deserialize<T>(json, options ?? JsonConfigHelper.Default);
+
+                    if (result == null)
+                        throw new JsonException("JSON文件解析失败，数据格式异常");
+                    
+                   return result;
                 }
                 catch (IOException ex)
                 {
-
                     throw new StorageIoException(filePath, ex.Message);
+                }
+                catch (JsonException ex)
+                {
+                    throw new StorageIoException(filePath, $"JSON解析异常：{ex.Message}");
                 }
             }
         }
@@ -43,14 +53,16 @@ namespace MultiSerVIsion.Solution.Shared.Helpers
                     if (!Directory.Exists(dir))
                         Directory.CreateDirectory(dir);
 
-                    string json = JsonSerializer.Serialize(data, options ?? new JsonSerializerOptions { WriteIndented = true });
+                    var serializeOpt=options ?? JsonConfigHelper.Default;
+                    string json=JsonSerializer.Serialize(data,serializeOpt);
+                    
                     File.WriteAllText(filePath, json);
                 }
                 catch (IOException ex)
                 {
                     throw new StorageIoException(filePath, ex.Message);
                 }
-                ;
+                
             }
         }
     }

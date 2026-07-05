@@ -1,5 +1,6 @@
 ﻿using MultiSerVIsion.Solution.Domain.Entities;
 using MultiSerVIsion.Solution.Domain.Repositories;
+using MultiSerVIsion.Solution.Shared.Exceptions;
 using MultiSerVIsion.Solution.Shared.Helpers;
 using MvCameraControl;
 using System;
@@ -26,14 +27,29 @@ namespace MultiSerVIsion.Solution.Infrastructure.Repository
            Shared.GlobalConst.AppDataFolder,
            Shared.GlobalConst.DeviceJsonFIleName
            );
-
-            if ( !Directory.Exists(_storagePath)){
-                FileloHelper.WriteJsonFile(_storagePath, new List<DeviceEntity>(), JsonConfigHelper.Default);
+            LogHelper.Info($"当前设备存储文件路径：{_storagePath}");
+        
+            string folder = Path.GetDirectoryName(_storagePath);
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+          
+            if (!File.Exists(_storagePath))
+            {
+                WriteAll(new List<DeviceEntity>());
             }
         }
         private List<DeviceEntity> ReadAll()
         {
+
+            if (!File.Exists(_storagePath))
+            {
+                return new List<DeviceEntity>();
+            }
+
             return FileloHelper.ReadJsonFile<List<DeviceEntity>>(_storagePath, JsonConfigHelper.Default);
+
         }
 
         private void WriteAll(List<DeviceEntity> list)
@@ -49,14 +65,22 @@ namespace MultiSerVIsion.Solution.Infrastructure.Repository
        
         public void Update(DeviceEntity deviceEntity)
         {
-            var list = ReadAll();
-            var index=list.FindIndex(d=>d.DeviceId==deviceEntity.DeviceId);
-            if (index == -1)
-                throw new KeyNotFoundException($"未找到设备{deviceEntity.DeviceId},无法更新");
+            try
+            {
+                var list = ReadAll();
+                var index = list.FindIndex(d => d.DeviceId == deviceEntity.DeviceId);
+                if (index == -1)
+                    throw new KeyNotFoundException($"未找到设备{deviceEntity.DeviceId},无法更新");
 
-            list[index]=deviceEntity;
-            WriteAll(list);
-            LogHelper.Info($"更新设备配置：{deviceEntity.DeviceName}({deviceEntity.DeviceId})");
+                list[index] = deviceEntity;
+                WriteAll(list);
+                LogHelper.Info($"更新设备配置：{deviceEntity.DeviceName}({deviceEntity.DeviceId})");
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Info($"仓储Add写入失败{ex}");
+                throw;
+            }
 
         }
         public void Add(DeviceEntity deviceEntity)
@@ -68,7 +92,7 @@ namespace MultiSerVIsion.Solution.Infrastructure.Repository
             list.Add(deviceEntity);
             WriteAll(list);
             LogHelper.Info($"新增设备成功：{deviceEntity.DeviceName}({deviceEntity.DeviceId})");
-
+            
         }
         public bool Remove(string deviceEntity) 
         {
@@ -83,7 +107,19 @@ namespace MultiSerVIsion.Solution.Infrastructure.Repository
             return true;
         }
       
-        public List<DeviceEntity> GetAll() { return ReadAll(); }
+        public List<DeviceEntity> GetAll() 
+        {
+            try
+            {
+                return ReadAll();
+            }
+            catch (StorageIoException ex)
+            {
+               
+                LogHelper.Error($"读取设备配置文件失败，禁止生成空数据覆盖原有文件：{ex.Message}", ex);
+                throw;
+            }
+        }
 
         public string GetGroupTag(string devId)
         {

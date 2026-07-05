@@ -61,6 +61,7 @@ namespace MultiSerVIsion.Solution.Presentation.Winforms
             }
             return new DeviceCreateInput
             {
+                DeviceId = txtDevIp.ToString(),
                 GroupTag = TargetGroupId,
                 DeviceName = txtDevNama.Text.Trim(),
                 IpAddress = txtDevIp.Text.Trim(),

@@ -9,7 +9,7 @@ namespace MultiSerVIsion.Solution.Shared
     public static class GlobalConst
     {
         public const string AppDataFolder = "AppData";
-        public const string DeviceJsonFIleName = "device.json";
+        public const string DeviceJsonFIleName = "Device.json";
 
         public const int DetailPanelWidth = 320;
 

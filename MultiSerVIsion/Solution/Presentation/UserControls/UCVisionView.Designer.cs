@@ -42,8 +42,8 @@
             this.cbxProtocolType = new System.Windows.Forms.ComboBox();
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
             this.nudGain = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
-            this.lblprotocolType = new System.Windows.Forms.Label();
+            this.lblFrameRate = new System.Windows.Forms.Label();
+            this.lblRIO = new System.Windows.Forms.Label();
             this.lblLightVakue = new System.Windows.Forms.Label();
             this.lblTriggerMode = new System.Windows.Forms.Label();
             this.lblGain = new System.Windows.Forms.Label();
@@ -211,8 +211,8 @@
             this.tableLayoutPanel3.Controls.Add(this.cbxProtocolType, 1, 4);
             this.tableLayoutPanel3.Controls.Add(this.numericUpDown6, 1, 5);
             this.tableLayoutPanel3.Controls.Add(this.nudGain, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.label11, 0, 5);
-            this.tableLayoutPanel3.Controls.Add(this.lblprotocolType, 0, 4);
+            this.tableLayoutPanel3.Controls.Add(this.lblFrameRate, 0, 5);
+            this.tableLayoutPanel3.Controls.Add(this.lblRIO, 0, 4);
             this.tableLayoutPanel3.Controls.Add(this.lblLightVakue, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this.lblTriggerMode, 0, 2);
             this.tableLayoutPanel3.Controls.Add(this.lblGain, 0, 1);
@@ -258,25 +258,25 @@
             this.nudGain.Size = new System.Drawing.Size(120, 35);
             this.nudGain.TabIndex = 12;
             // 
-            // label11
+            // lblFrameRate
             // 
-            this.label11.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(3, 468);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(94, 24);
-            this.label11.TabIndex = 10;
-            this.label11.Text = "label11";
+            this.lblFrameRate.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblFrameRate.AutoSize = true;
+            this.lblFrameRate.Location = new System.Drawing.Point(3, 468);
+            this.lblFrameRate.Name = "lblFrameRate";
+            this.lblFrameRate.Size = new System.Drawing.Size(58, 24);
+            this.lblFrameRate.TabIndex = 10;
+            this.lblFrameRate.Text = "帧率";
             // 
-            // lblprotocolType
+            // lblRIO
             // 
-            this.lblprotocolType.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblprotocolType.AutoSize = true;
-            this.lblprotocolType.Location = new System.Drawing.Point(3, 379);
-            this.lblprotocolType.Name = "lblprotocolType";
-            this.lblprotocolType.Size = new System.Drawing.Size(82, 24);
-            this.lblprotocolType.TabIndex = 8;
-            this.lblprotocolType.Text = "label1";
+            this.lblRIO.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblRIO.AutoSize = true;
+            this.lblRIO.Location = new System.Drawing.Point(3, 379);
+            this.lblRIO.Name = "lblRIO";
+            this.lblRIO.Size = new System.Drawing.Size(94, 24);
+            this.lblRIO.TabIndex = 8;
+            this.lblRIO.Text = "ROI区域";
             // 
             // lblLightVakue
             // 
@@ -448,8 +448,8 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.PictureBox picVisionImg;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label lblprotocolType;
+        private System.Windows.Forms.Label lblFrameRate;
+        private System.Windows.Forms.Label lblRIO;
         private System.Windows.Forms.Label lblLightVakue;
         private System.Windows.Forms.Label lblTriggerMode;
         private System.Windows.Forms.Label lblGain;
