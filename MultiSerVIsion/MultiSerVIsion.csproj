@@ -35,14 +35,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="halcondotnet">
-      <HintPath>..\..\..\HALCON\bin\dotnet35\halcondotnet.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=10.0.0.9, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.10.0.9\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="MvCameraControl.Net">
-      <HintPath>C:\Program Files (x86)\MVS\Development\DotNet\win64\net40\MvCameraControl.Net.dll</HintPath>
+      <HintPath>D:\MVS\Development\DotNet\win64\netstandard2.0\MvCameraControl.Net.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -90,19 +87,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Solution\Application\DeviceAppService.cs" />
+    <Compile Include="Solution\Application\Dtos\CameraUiDto.cs" />
     <Compile Include="Solution\Application\Dtos\DeviceCreateInput.cs" />
     <Compile Include="Solution\Application\Dtos\DeviceUpdateIput.cs" />
     <Compile Include="Solution\Application\IDeviceAppService.cs" />
+    <Compile Include="Solution\Application\Services\CameraApplicationoService.cs" />
+    <Compile Include="Solution\Domain\Entities\CameraEntity.cs" />
     <Compile Include="Solution\Domain\Entities\Configs\CameraConnectConfig.cs" />
     <Compile Include="Solution\Domain\Entities\Configs\MotionCardConnectConfig.cs" />
     <Compile Include="Solution\Domain\Entities\Configs\PlcconnectConfig.cs" />
     <Compile Include="Solution\Domain\Entities\DeviceEntity.cs" />
+    <Compile Include="Solution\Domain\Enums\CameraStatus.cs" />
     <Compile Include="Solution\Domain\Enums\DeviceCategory.cs" />
-    <Compile Include="Solution\Domain\Models\OperationResult.cs" />
-    <Compile Include="Solution\Domain\Models\ValidationResult.cs" />
+    <Compile Include="Solution\Domain\Models\CameraDeviceDto.cs" />
+    <Compile Include="Solution\Domain\Repositories\ICameraDeviceManager.cs" />
+    <Compile Include="Solution\Domain\Repositories\ICameraHardwareDriver.cs" />
     <Compile Include="Solution\Domain\Repositories\IDeviceRepository.cs" />
+    <Compile Include="Solution\Domain\Services\CameraDomainService.cs" />
     <Compile Include="Solution\Domain\Services\DeviceDomainService.cs" />
+    <Compile Include="Solution\Domain\Services\ICameraDeviceService.cs" />
     <Compile Include="Solution\Domain\Services\IDeviceDomainSerivce.cs" />
+    <Compile Include="Solution\Infrastructure\HiKHardware\HikCameraHardwareDriver.cs" />
+    <Compile Include="Solution\Infrastructure\Repository\CameraDeviceManager.cs" />
     <Compile Include="Solution\Infrastructure\Repository\DeviceRepository.cs" />
     <Compile Include="Solution\Presentation\Presenter\DeviceDetailPresenter.cs" />
     <Compile Include="Solution\Presentation\Presenter\DeviceTressPresenter.cs" />
@@ -165,6 +171,7 @@
     <Compile Include="Solution\Presentation\Winforms\FrmAddDevice.Designer.cs">
       <DependentUpon>FrmAddDevice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Solution\Shared\CamerKernel\CameraException.cs" />
     <Compile Include="Solution\Shared\Exceptions\DeviceNotFoundException.cs" />
     <Compile Include="Solution\Shared\GlobalConst.cs" />
     <Compile Include="Solution\Shared\Helpers\FileloHelper.cs" />

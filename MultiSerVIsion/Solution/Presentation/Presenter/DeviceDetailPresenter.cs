@@ -75,6 +75,7 @@ namespace MultiSerVIsion.Solution.Presentation.Presenter
         public void ClearEdit()
         {
             _currentEditDevId = string.Empty;
+            if(_datailView==null) return;
             _datailView.ClearPanel();
         }
         private void OnSaveConfig()

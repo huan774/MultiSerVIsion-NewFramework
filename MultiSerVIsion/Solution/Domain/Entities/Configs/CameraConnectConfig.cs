@@ -9,6 +9,7 @@ namespace MultiSerVIsion.Solution.Domain.Entities.Configs
 {
     public class CameraConnectConfig
     {
+       
         public int Port { get; set; } = 3956;               
         public int DefaultExposureUs { get; set; } = 5000; 
         public int DefaultGain { get; set; } = 8;          
